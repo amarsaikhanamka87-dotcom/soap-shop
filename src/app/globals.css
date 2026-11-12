@@ -1,0 +1,268 @@
+@import "tailwindcss";
+
+/* Design tokens: grass green + newspaper paper. Single light look by design. */
+@theme {
+  --color-grass: #4f8a2b;
+  --color-grass-deep: #2f5a1a;
+  --color-grass-light: #9cc85a;
+  --color-paper: #f2eee3;
+  --color-paper-dark: #e4ddcb;
+  --color-ink: #1f2419;
+  --color-ink-soft: #5b6150;
+  --color-sun: #e8b923;
+
+  --font-display: var(--font-old-standard), "Times New Roman", serif;
+  --font-serif: var(--font-pt-serif), Georgia, serif;
+  --font-mono: var(--font-pt-mono), ui-monospace, Menlo, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  h1,
+  h2,
+  h3 {
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-grass);
+    outline-offset: 3px;
+  }
+  /* Newspaper grain over the whole page */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .32 0 0 0 0 .25 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@layer components {
+  .site-container {
+    margin-inline: auto;
+    max-width: 1180px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-right: 1px solid var(--color-paper-dark);
+  }
+  .nav-link:last-child {
+    border-right: 0;
+  }
+
+  /* Background video: the clip is portrait-encoded with sideways footage.
+     Rotated -90deg, the element's left edge becomes the screen bottom,
+     so object-position 0% keeps the ground and crops the sky. */
+  .bg-video {
+    position: fixed;
+    inset: 0;
+    z-index: -1; /* behind all page content, above the page background */
+    overflow: hidden;
+    container-type: size;
+    background: var(--color-grass-light);
+  }
+  .bg-video__media {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100cqh;
+    height: 100cqw;
+    max-width: none; /* Tailwind preflight caps videos at 100% width, which breaks the rotated box */
+    transform: translate(-50%, -50%) rotate(-90deg);
+    object-fit: cover;
+    object-position: 0% 50%;
+  }
+
+  /* Text placed directly on the video */
+  .on-video {
+    color: #fff;
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.55), 0 0 18px rgb(0 0 0 / 0.25);
+  }
+  .on-video .badge,
+  .on-video .soap-bar {
+    text-shadow: none;
+  }
+  .on-video .product-shot {
+    box-shadow: 0 14px 34px rgb(0 0 0 / 0.3);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid var(--color-ink);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    padding: 11px 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .btn:hover:not(:disabled) {
+    background: var(--color-grass-deep);
+    border-color: var(--color-grass-deep);
+  }
+
+  /* Label / value rows (product facts, ingredient list) */
+  .fact-list {
+    border-top: 1px solid var(--color-ink);
+  }
+  .fact-list > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--color-ink-soft);
+    font-size: 15px;
+  }
+  .fact-list dt {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+  .fact-list dd {
+    text-align: right;
+  }
+
+  .product-shot {
+    background: linear-gradient(180deg, #f3ebdd, #ece2d0);
+  }
+
+  .badge {
+    background: #fffdf7;
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+  }
+  .badge--muted {
+    background: #d9d3c6;
+    color: #6d6a60;
+  }
+
+  /* Drawn soap bar placeholder */
+  .soap-bar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 42%;
+    aspect-ratio: 3 / 4.1;
+    border-radius: 6px 6px 5px 5px;
+    background:
+      radial-gradient(circle at 20% 30%, rgb(0 0 0 / 0.12) 1px, transparent 1.6px) 0 0 / 13px 15px,
+      radial-gradient(circle at 70% 60%, rgb(0 0 0 / 0.1) 1px, transparent 1.8px) 0 0 / 17px 11px,
+      linear-gradient(100deg, #e6dcc3 0%, #e6dcc3 62%, #c9bc9c 100%);
+    box-shadow:
+      inset 0 6px 0 rgb(255 255 255 / 0.25),
+      inset -6px 0 10px rgb(0 0 0 / 0.06),
+      24px 22px 26px -10px rgb(80 60 30 / 0.35);
+    transition: transform 0.4s ease;
+  }
+  .group:hover .soap-bar {
+    transform: translateY(-6px) rotate(-2deg);
+  }
+  .soap-bar__stamp {
+    font-family: var(--font-display);
+    font-size: clamp(9px, 1.2vw, 13px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgb(0 0 0 / 0.22);
+    text-align: center;
+    padding-inline: 6px;
+  }
+
+  /* Home page music button */
+  .sound-toggle {
+    position: fixed;
+    right: max(16px, calc(env(safe-area-inset-right, 0px) + 16px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border: 1.5px solid var(--color-ink);
+    padding: 9px 16px 9px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 4px 4px 0 var(--color-grass-deep);
+    cursor: pointer;
+  }
+  .sound-toggle[aria-pressed="true"] {
+    background: var(--color-grass);
+    color: var(--color-paper);
+  }
+  .sound-toggle__bars i {
+    display: inline-block;
+    width: 3px;
+    height: 10px;
+    margin-right: 2px;
+    background: currentColor;
+    transform-origin: bottom;
+  }
+  .sound-toggle[aria-pressed="true"] .sound-toggle__bars i {
+    animation: sound-eq 0.9s ease-in-out infinite;
+  }
+  .sound-toggle__bars i:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .sound-toggle__bars i:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+}
+
+@keyframes sound-eq {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

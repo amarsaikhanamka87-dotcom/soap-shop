@@ -1,0 +1,58 @@
+// Prisma schema for Tal Savan (Supabase Postgres, dedicated project for the soap shop).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // pooled connection (port 6543, pgbouncer) used by the app
+  directUrl = env("DIRECT_URL") // session connection (port 5432) used by Prisma CLI / migrations
+}
+
+/// A soap sold in the shop.
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique // used in the URL: /products/[slug]
+  name        String
+  description String
+  priceMnt    Int      @map("price_mnt") // price in tögrög (₮), whole numbers
+  weightGrams Int      @default(100) @map("weight_grams")
+  skinType    String?  @map("skin_type") // e.g. "Хуурай арьс"
+  imagePath   String?  @map("image_path") // path inside the Supabase storage bucket
+  inStock     Boolean  @default(true) @map("in_stock")
+  isNew       Boolean  @default(false) @map("is_new") // shows the "Шинэ" badge
+  isFeatured  Boolean  @default(false) @map("is_featured") // shown in "Онцлох саван" on the home page
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  ingredients ProductIngredient[]
+
+  @@map("products")
+}
+
+/// A natural ingredient (e.g. Багваахайн ханд), shared between products.
+model Ingredient {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String? // general description of the ingredient
+
+  products ProductIngredient[]
+
+  @@map("ingredients")
+}
+
+/// Which ingredients a soap contains, in display order, with what it does in that soap.
+model ProductIngredient {
+  productId    String  @map("product_id")
+  ingredientId String  @map("ingredient_id")
+  benefit      String? // e.g. "Арьсыг тайвшруулж, улайлтыг бууруулна"
+  sortOrder    Int     @default(0) @map("sort_order")
+
+  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
+
+  @@id([productId, ingredientId])
+  @@index([ingredientId])
+  @@map("product_ingredients")
+}
