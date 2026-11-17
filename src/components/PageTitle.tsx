@@ -1,4 +1,4 @@
-// Newspaper-style page heading with a rule underneath.
+// Bold page heading with an optional green pill label beside it.
 
 type PageTitleProps = {
   title: string;
@@ -7,9 +7,9 @@ type PageTitleProps = {
 
 export function PageTitle({ title, aside }: PageTitleProps) {
   return (
-    <div className="mb-6 flex flex-wrap items-baseline justify-between gap-3 border-b-2 border-ink pb-2">
-      <h1 className="font-display text-[clamp(30px,4.5vw,44px)]">{title}</h1>
-      {aside && <span className="kicker text-grass-deep">{aside}</span>}
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+      <h1 className="text-[clamp(32px,5vw,56px)]">{title}</h1>
+      {aside && <span className="kicker rounded-full bg-grass-light px-3.5 py-1.5 text-grass-deep">{aside}</span>}
     </div>
   );
 }

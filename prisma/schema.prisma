@@ -1,4 +1,4 @@
-// Prisma schema for Tal Savan (Supabase Postgres, dedicated project for the soap shop).
+// Prisma schema for Ээл Brand (Supabase Postgres, dedicated project for the soap shop).
 
 generator client {
   provider = "prisma-client-js"
@@ -19,7 +19,6 @@ model Product {
   priceMnt    Int      @map("price_mnt") // price in tögrög (₮), whole numbers
   weightGrams Int      @default(100) @map("weight_grams")
   skinType    String?  @map("skin_type") // e.g. "Хуурай арьс"
-  imagePath   String?  @map("image_path") // path inside the Supabase storage bucket
   inStock     Boolean  @default(true) @map("in_stock")
   isNew       Boolean  @default(false) @map("is_new") // shows the "Шинэ" badge
   isFeatured  Boolean  @default(false) @map("is_featured") // shown in "Онцлох саван" on the home page
@@ -27,8 +26,26 @@ model Product {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   ingredients ProductIngredient[]
+  images      ProductImage[]
 
   @@map("products")
+}
+
+/// A photo of a product. The file lives in the public "product-images" Supabase Storage bucket.
+/// The photo with the lowest sortOrder is the main one (cards, cart); the product page shows all.
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String   @map("product_id")
+  path      String // file name inside the bucket, e.g. "bagvaakhai.jpg"
+  alt       String? // describes the photo for screen readers; falls back to the product name
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, path])
+  @@index([productId, sortOrder])
+  @@map("product_images")
 }
 
 /// A natural ingredient (e.g. Багваахайн ханд), shared between products.

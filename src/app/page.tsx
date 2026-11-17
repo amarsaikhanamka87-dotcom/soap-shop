@@ -1,16 +1,18 @@
-import { BackgroundVideo } from "@/components/layout/BackgroundVideo";
-import { FeaturedProducts } from "@/features/home/components/FeaturedProducts";
-import { SoundToggle } from "@/features/home/components/SoundToggle";
+import { BrandBand } from "@/features/home/components/BrandBand";
+import { HeroSection } from "@/features/home/components/HeroSection";
+import { HomeAboutSection } from "@/features/home/components/HomeAboutSection";
+import { HomeContactSection } from "@/features/home/components/HomeContactSection";
+import { NewInProducts } from "@/features/home/components/NewInProducts";
 
-// Home is the only page with the steppe video behind it; other pages use the newspaper paper.
+// Home is one long page: the menu scrolls to #products, #about and #contact.
 export default function HomePage() {
   return (
     <>
-      <BackgroundVideo />
-      {/* Empty band that lets the background video show on its own */}
-      <section aria-label="Монгол тал нутаг" className="h-[min(72vh,680px)] min-h-80" />
-      <FeaturedProducts />
-      <SoundToggle />
+      <HeroSection />
+      <NewInProducts />
+      <BrandBand />
+      <HomeAboutSection />
+      <HomeContactSection />
     </>
   );
 }

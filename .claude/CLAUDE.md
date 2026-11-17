@@ -29,6 +29,7 @@
 
 # 1 to 1 file
 
+- **1 file = 1 logic.** Each file does one job: one component, one hook, one query set, one validator, one action. When a file starts doing a second job, split it into its own file.
 - Follow separation of concerns and the Single Responsibility Principle.
 - Organize related code by feature.
 - Keep UI, business logic, validation, and database access separate.

@@ -2,32 +2,40 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { mainNav } from "@/config/site";
+import { homeSectionIds, mainNav } from "@/config/site";
 import { CartCount } from "@/features/cart/components/CartCount";
+import { isNavItemActive } from "./isNavItemActive";
+import { useActiveSection } from "./useActiveSection";
 
-function isActive(pathname: string, href: string) {
-  return href === "/" ? pathname === "/" : pathname.startsWith(href);
-}
+const SECTION_IDS = Object.values(homeSectionIds);
 
+// Main menu links; the highlight follows the page, or the section in view on the home page.
 export function MainNav() {
   const pathname = usePathname();
+  const activeSection = useActiveSection(SECTION_IDS, pathname === "/");
 
   return (
     <nav
       aria-label="Үндсэн цэс"
-      className="flex flex-wrap justify-center border-t border-ink py-1.5"
+      className="-mx-4 flex w-[calc(100%+32px)] items-center gap-1 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:w-auto md:px-0"
     >
-      {mainNav.map(({ href, label }) => {
-        const active = isActive(pathname, href);
+      {mainNav.map((item) => {
+        const active = isNavItemActive(item, pathname, activeSection);
+        const isCart = item.href === "/cart";
+        const colors = isCart
+          ? "ml-auto bg-grass text-white hover:bg-grass-deep md:ml-2"
+          : active
+            ? "bg-grass-light text-grass-deep"
+            : "hover:bg-mist hover:text-grass-deep";
         return (
           <Link
-            key={href}
-            href={href}
-            aria-current={active ? "page" : undefined}
-            className={`nav-link ${active ? "bg-ink text-paper" : "hover:text-grass"}`}
+            key={item.href}
+            href={item.href}
+            aria-current={active ? (pathname === "/" && "section" in item ? "location" : "page") : undefined}
+            className={`nav-link ${colors}`}
           >
-            {label}
-            {href === "/cart" && <CartCount />}
+            {item.label}
+            {item.href === "/cart" && <CartCount />}
           </Link>
         );
       })}

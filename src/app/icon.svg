@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Same drawing as src/components/layout/Logo.tsx, with the theme colors as hex -->
+  <circle cx="32" cy="32" r="30" fill="#12823b"/>
+  <circle cx="32" cy="32" r="26.5" fill="none" stroke="#cdebd5" stroke-width="1.2"/>
+  <path d="M30 18.5 C26 17.5 24 14 24 10 C28 11 30 14 30 18.5 Z" fill="#fbfaf6"/>
+  <path d="M32 19 C32 13.5 35.5 10 41 9.5 C41 15 37 19 32 19 Z" fill="#cdebd5"/>
+  <path d="M33 18 Q36 14 39.5 11" stroke="#0b4f24" stroke-width="1" fill="none" stroke-linecap="round"/>
+  <path d="M21 22 A13.5 13.5 0 1 1 21 44" fill="none" stroke="#fbfaf6" stroke-width="5.5" stroke-linecap="round"/>
+  <rect x="25" y="30" width="17" height="6.5" rx="3.2" fill="#cdebd5"/>
+  <rect x="31" y="31.9" width="8" height="2.7" rx="1" fill="none" stroke="#0b4f24" stroke-width="0.8"/>
+  <circle cx="48" cy="20" r="1.6" fill="#fbfaf6"/>
+  <circle cx="51" cy="16" r="1.1" fill="#fbfaf6"/>
+</svg>

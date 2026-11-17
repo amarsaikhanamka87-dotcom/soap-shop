@@ -12,6 +12,7 @@ export type SeedProduct = {
   inStock: boolean;
   isNew: boolean;
   isFeatured: boolean;
+  images?: string[]; // file names in the "product-images" Supabase bucket, main photo first (upload with npm run images:upload)
   ingredients: SeedIngredient[];
 };
 
@@ -27,6 +28,7 @@ export const seedProducts: SeedProduct[] = [
     inStock: true,
     isNew: true,
     isFeatured: true,
+    images: ["bagvaakhai.jpg"],
     ingredients: [
       { name: "Багваахайн ханд", benefit: "Арьсыг тайвшруулж, улайлтыг бууруулна" },
       { name: "Чацарганы тос", benefit: "Витамин C, E-ээр арьсыг тэжээнэ" },

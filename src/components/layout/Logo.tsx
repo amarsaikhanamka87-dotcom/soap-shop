@@ -1,30 +1,27 @@
-// Placeholder logo: a dandelion seed head with a leaf over a steppe line.
+// Logo: green circle seal with a cream "Э" for Ээл Brand. Two leaves sprout from the top
+// of the letter, its middle bar is a light green soap bar, and two small bubbles float beside it.
+// Keep in sync with src/app/icon.svg (the browser tab icon uses the same drawing with hex colors).
 
 export function Logo({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
-      <circle cx="32" cy="32" r="30" fill="none" stroke="var(--color-ink)" strokeWidth="2" />
-      <g stroke="var(--color-grass-deep)" strokeWidth="1.4" strokeLinecap="round">
-        <line x1="32" y1="30" x2="32" y2="12" />
-        <line x1="32" y1="30" x2="45" y2="17" />
-        <line x1="32" y1="30" x2="19" y2="17" />
-        <line x1="32" y1="30" x2="50" y2="27" />
-        <line x1="32" y1="30" x2="14" y2="27" />
-        <line x1="32" y1="30" x2="40" y2="13" />
-        <line x1="32" y1="30" x2="24" y2="13" />
-      </g>
-      <g fill="var(--color-grass-deep)">
-        <circle cx="32" cy="11" r="2" />
-        <circle cx="46" cy="16" r="2" />
-        <circle cx="18" cy="16" r="2" />
-        <circle cx="51" cy="27" r="2" />
-        <circle cx="13" cy="27" r="2" />
-        <circle cx="41" cy="12" r="1.6" />
-        <circle cx="23" cy="12" r="1.6" />
-      </g>
-      <path d="M32 30 C32 40 30 46 32 54" stroke="var(--color-ink)" strokeWidth="1.8" fill="none" />
-      <path d="M31.5 46 C26 45 22 41 21 36 C27 37 31 41 31.5 46Z" fill="var(--color-grass)" />
-      <path d="M8 50 Q20 43 32 48 T56 47" stroke="var(--color-grass)" strokeWidth="1.6" fill="none" />
+      {/* Seal */}
+      <circle cx="32" cy="32" r="30" fill="var(--color-grass)" />
+      <circle cx="32" cy="32" r="26.5" fill="none" stroke="var(--color-grass-light)" strokeWidth="1.2" />
+
+      {/* Leaves on top of the Э */}
+      <path d="M30 18.5 C26 17.5 24 14 24 10 C28 11 30 14 30 18.5 Z" fill="var(--color-paper)" />
+      <path d="M32 19 C32 13.5 35.5 10 41 9.5 C41 15 37 19 32 19 Z" fill="var(--color-grass-light)" />
+      <path d="M33 18 Q36 14 39.5 11" stroke="var(--color-grass-deep)" strokeWidth="1" fill="none" strokeLinecap="round" />
+
+      {/* Э: open curve + soap-bar middle stroke */}
+      <path d="M21 22 A13.5 13.5 0 1 1 21 44" fill="none" stroke="var(--color-paper)" strokeWidth="5.5" strokeLinecap="round" />
+      <rect x="25" y="30" width="17" height="6.5" rx="3.2" fill="var(--color-grass-light)" />
+      <rect x="31" y="31.9" width="8" height="2.7" rx="1" fill="none" stroke="var(--color-grass-deep)" strokeWidth="0.8" />
+
+      {/* Bubbles */}
+      <circle cx="48" cy="20" r="1.6" fill="var(--color-paper)" />
+      <circle cx="51" cy="16" r="1.1" fill="var(--color-paper)" />
     </svg>
   );
 }

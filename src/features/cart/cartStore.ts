@@ -3,7 +3,7 @@
 
 export type CartItems = Record<string, number>;
 
-const STORAGE_KEY = "tal-savan-cart";
+const STORAGE_KEY = "tal-savan-cart"; // old brand name; kept so saved carts survive the rename
 const MAX_QUANTITY = 20;
 const EMPTY: CartItems = {};
 
@@ -64,10 +64,6 @@ export function setCartQuantity(slug: string, quantity: number) {
   const rest = { ...getCartSnapshot() };
   delete rest[slug];
   write(quantity > 0 ? { ...rest, [slug]: Math.min(MAX_QUANTITY, quantity) } : rest);
-}
-
-export function countCartItems(items: CartItems): number {
-  return Object.values(items).reduce((total, quantity) => total + quantity, 0);
 }
 
 export { MAX_QUANTITY };

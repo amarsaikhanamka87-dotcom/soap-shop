@@ -1,29 +1,38 @@
 import "server-only";
 import { cacheLife } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import type { ProductDetail, ProductSummary } from "./types";
+import type { ProductDetail, ProductImageInfo, ProductSummary } from "./types";
+
+const imageSelect = { path: true, alt: true } as const;
+const imagesInOrder = { orderBy: { sortOrder: "asc" }, select: imageSelect } as const;
 
 const summarySelect = {
   slug: true,
   name: true,
   priceMnt: true,
   weightGrams: true,
-  imagePath: true,
   inStock: true,
   isNew: true,
+  images: { ...imagesInOrder, take: 1 },
 } as const;
 
-/** Products marked "featured", shown in "Онцлох саван" on the home page. */
-export async function getFeaturedProducts(): Promise<ProductSummary[]> {
+/** Turns the 0–1 photo list from summarySelect into `mainImage`. */
+function toSummary<T extends { images: ProductImageInfo[] }>({ images, ...product }: T) {
+  return { ...product, mainImage: images[0] ?? null };
+}
+
+/** Newest in-stock products, shown in the "New In" carousel on the home page. */
+export async function getNewInProducts(): Promise<ProductSummary[]> {
   "use cache";
   cacheLife("hours");
 
-  return prisma.product.findMany({
-    where: { isFeatured: true },
+  const rows = await prisma.product.findMany({
+    where: { inStock: true },
     select: summarySelect,
-    orderBy: { createdAt: "asc" },
-    take: 3,
+    orderBy: { createdAt: "desc" },
+    take: 8,
   });
+  return rows.map(toSummary);
 }
 
 /** All products for the catalogue page, in-stock first. */
@@ -31,10 +40,11 @@ export async function getAllProducts(): Promise<ProductSummary[]> {
   "use cache";
   cacheLife("hours");
 
-  return prisma.product.findMany({
+  const rows = await prisma.product.findMany({
     select: summarySelect,
     orderBy: [{ inStock: "desc" }, { createdAt: "asc" }],
   });
+  return rows.map(toSummary);
 }
 
 /** Slugs of every product, used to prerender the detail pages. */
@@ -46,7 +56,7 @@ export async function getAllProductSlugs(): Promise<string[]> {
   return rows.map((row) => row.slug);
 }
 
-/** One product with its ingredients in display order, or null if the slug is unknown. */
+/** One product with all its photos and ingredients in display order, or null if the slug is unknown. */
 export async function getProductBySlug(slug: string): Promise<ProductDetail | null> {
   "use cache";
   cacheLife("hours");
@@ -55,6 +65,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDetail | nu
     where: { slug },
     select: {
       ...summarySelect,
+      images: imagesInOrder,
       description: true,
       skinType: true,
       ingredients: {
@@ -68,6 +79,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDetail | nu
 
   return {
     ...product,
+    mainImage: product.images[0] ?? null,
     ingredients: product.ingredients.map(({ benefit, ingredient }) => ({
       name: ingredient.name,
       benefit,

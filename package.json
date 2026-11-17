@@ -9,13 +9,16 @@
     "lint": "eslint",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "images:upload": "tsx --env-file=.env scripts/upload-product-images.ts",
+    "images:link": "tsx --env-file=.env scripts/link-product-images.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
     "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "resend": "^6.38.1",
     "server-only": "^0.0.1"
   },
   "devDependencies": {

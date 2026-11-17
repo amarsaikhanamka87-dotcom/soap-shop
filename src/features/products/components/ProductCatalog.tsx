@@ -1,39 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { sortOptions, sortProducts, type SortOption } from "../sorting";
+import { sortProducts, type SortOption } from "../sorting";
 import type { ProductSummary } from "../types";
 import { ProductCard } from "./ProductCard";
+import { ProductSortSelect } from "./ProductSortSelect";
 
 type ProductCatalogProps = {
   products: ProductSummary[];
 };
 
+// Product count + sort control above the sorted product grid.
 export function ProductCatalog({ products }: ProductCatalogProps) {
   const [sort, setSort] = useState<SortOption>("popular");
   const sorted = sortProducts(products, sort);
 
   return (
     <>
-      <div className="mb-4.5 flex flex-wrap items-center justify-between gap-3 font-mono text-[13px] uppercase tracking-[0.08em]">
+      <div className="mb-4.5 flex flex-wrap items-center justify-between gap-3 text-[13px] font-extrabold uppercase tracking-[0.08em]">
         <span>{products.length} бүтээгдэхүүн</span>
-        <label className="flex items-center gap-2">
-          Эрэмбэлэх:
-          <select
-            id="product-sort"
-            value={sort}
-            onChange={(event) => setSort(event.target.value as SortOption)}
-            className="border-b border-ink bg-transparent px-1 py-0.5 normal-case"
-          >
-            {sortOptions.map(({ value, label }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <ProductSortSelect value={sort} onChange={setSort} />
       </div>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 md:gap-x-5.5 md:gap-y-7">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 md:gap-x-6 md:gap-y-10">
         {sorted.map((product) => (
           <ProductCard key={product.slug} product={product} />
         ))}

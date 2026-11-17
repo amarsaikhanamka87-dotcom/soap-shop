@@ -8,7 +8,7 @@ import { seedProducts } from "./seed-data";
 const prisma = new PrismaClient();
 
 async function main() {
-  for (const { ingredients, ...product } of seedProducts) {
+  for (const { ingredients, images = [], ...product } of seedProducts) {
     const savedProduct = await prisma.product.upsert({
       where: { slug: product.slug },
       update: product,
@@ -34,7 +34,13 @@ async function main() {
       });
     }
 
-    console.log(`✓ ${product.name} (${ingredients.length} орц)`);
+    // Same for photos: the list in seed-data.ts, in order, main photo first.
+    await prisma.productImage.deleteMany({ where: { productId: savedProduct.id } });
+    for (const [sortOrder, path] of images.entries()) {
+      await prisma.productImage.create({ data: { productId: savedProduct.id, path, sortOrder } });
+    }
+
+    console.log(`✓ ${product.name} (${ingredients.length} орц, ${images.length} зураг)`);
   }
 }
 

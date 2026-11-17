@@ -1,39 +1,28 @@
 import type { Metadata } from "next";
-import { Old_Standard_TT, PT_Mono, PT_Serif } from "next/font/google";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { siteConfig } from "@/config/site";
+import { fontVariables } from "./fonts";
 import "./globals.css";
-
-// Newspaper-style faces with Cyrillic support.
-const displayFont = Old_Standard_TT({
-  variable: "--font-old-standard",
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "700"],
-});
-
-const bodyFont = PT_Serif({
-  variable: "--font-pt-serif",
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
-});
-
-const monoFont = PT_Mono({
-  variable: "--font-pt-mono",
-  subsets: ["latin", "cyrillic"],
-  weight: "400",
-});
 
 export const metadata: Metadata = {
   title: { default: siteConfig.name, template: `%s · ${siteConfig.name}` },
   description: siteConfig.description,
 };
 
+// Shell shared by every page: phone strip, header, page content, footer.
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="mn" className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}>
+    <html
+      lang="mn"
+      // Smooth scrolling for menu links to home sections; data-scroll-behavior keeps
+      // page-to-page navigation an instant jump to the top.
+      data-scroll-behavior="smooth"
+      className={`scroll-smooth motion-reduce:scroll-auto ${fontVariables}`}
+    >
       <body className="flex min-h-screen flex-col">
+        <AnnouncementBar />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
